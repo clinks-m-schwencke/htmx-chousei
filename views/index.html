@@ -21,6 +21,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/public/css/tailwind.css" />
 <script src="/public/htmx.min.js"></script>
+<script src="/public/main.js"></script>
 {{end}}
 
 {{ define "header" }}
@@ -39,26 +40,37 @@
 {{ end }}
 
 {{ define "form_new_meeting" }}
-<form class="flex w-1/2 flex-grow p-4 gap-4">
-	<div class="w-full">
-		<div>
-			<label class="block">
-				Event Title
-			</label>
-			<input type="text" />
+<form>
+	<div class="flex min-w-min flex-grow p-4 gap-4">
+
+		<div class="w-full">
+			<div>
+				<label class="block">
+					Event Title
+				</label>
+				<input type="text" />
+			</div>
+			<div>
+				<label class="block">
+					Event Description (Optional)
+				</label>
+				<textarea></textarea>
+			</div>
 		</div>
-		<div>
+		<div class="w-full">
 			<label class="block">
-				Event Description (Optional)
+				Dates & Times
 			</label>
-			<textarea></textarea>
+			<small>New line for each time</small>
+			<textarea id="datetimes-textarea" placeholder="yyyy-MM-dd, HH:mm"></textarea>
+		</div>
+		<div class="w-full">
+			<label class="block">
+				Select Dates & Times
+			</label>
+			<input id="datetime-select" type="datetime-local" onchange="addDate()" />
 		</div>
 	</div>
-	<div class="w-full">
-		<label class="block">
-			Dates & Times
-		</label>
-		<textarea></textarea>
-	</div>
+	<button type="submit" class="bg-gray-50 p-8 rounded">Create Event</button>
 </form>
 {{ end }}
