@@ -1,0 +1,4 @@
+
+# Ignore HTMX files
+htmx.min.js
+htmx.js
