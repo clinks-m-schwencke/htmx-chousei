@@ -1,40 +1,70 @@
 {{ define "meeting_new" }}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    {{template "head_content" }}
+    <title>New Meeting</title>
+  </head>
 
-<head>
-	{{template "head_content" }}
-	<title>New Meeting</title>
-</head>
-
-<body>
-	<main>
-		<h2>NEW MEETING</h2>
-		<a href="/">Go Back</a>
-		{{ template "meeting_form" }}
-	</main>
-</body>
-
+  <body>
+    <main>
+      <h2>NEW MEETING</h2>
+      <a href="/">Go Back</a>
+      {{ template "meeting_form" }}
+    </main>
+  </body>
 </html>
-{{end}}
-
-{{ block "meeting_form" . }}
+{{end}} {{ block "meeting_form" . }}
 <form hx-post="/meeting">
-	<div>
-		<label for="title">Title</label>
-		<input id="title" name="title" type="text" required {{ if .Values.title }} value="{{ .Values.title }}" {{ end
-			}}>
-	</div>
-	<div>
-		<label for="datetimes">Dates and Times</label>
-		<textarea id="datetimes" name="datetimes" required {{ if .Values.datetimes }} value="{{ .Values.datetimes }}" {{
-			end }}></textarea>
-	</div>
-	<div>
-		<label for="description">Description (Optional)</label>
-		<textarea id="description" name="description" type="text" {{ if .Values.description }}
-			value="{{ .Values.description }}" {{ end }}></textarea>
-	</div>
-	<button type="submit">Create Meeting</button>
+  <div>
+    <label for="title">Title</label>
+    <input
+      id="title"
+      name="title"
+      type="text"
+      required
+      {{
+      if
+      .Values.title
+      }}
+      value="{{ .Values.title }}"
+      {{
+      end
+      }}
+    />
+  </div>
+  <div>
+    <label for="datetimes">Dates and Times</label>
+    <textarea
+      id="datetimes"
+      name="datetimes"
+      required
+      {{
+      if
+      .Values.datetimes
+      }}
+      value="{{ .Values.datetimes }}"
+      {{
+      end
+      }}
+    ></textarea>
+  </div>
+  <div>
+    <label for="description">Description (Optional)</label>
+    <textarea
+      id="description"
+      name="description"
+      type="text"
+      {{
+      if
+      .Values.description
+      }}
+      value="{{ .Values.description }}"
+      {{
+      end
+      }}
+    ></textarea>
+  </div>
+  <button type="submit">Create Meeting</button>
 </form>
 {{end}}

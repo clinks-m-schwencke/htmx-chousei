@@ -1,76 +1,73 @@
+<!-- Index -->
 {{ define "index" }}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-	{{template "head_content"}}
-	<title>Hello Go!</title>
+  {{template "head_content"}}
+  <title>Hello Go!</title>
 </head>
 
-
 <body>
-	{{ template "header" }}
-	{{ template "main" }}
+  <!-- Include Header -->
+  {{ template "header" }}
+  <!-- Include main -->
+  {{ template "main" }}
 </body>
 
 </html>
 {{end}}
 
+<!-- Head Content -->
 {{ define "head_content" }}
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/public/css/tailwind.css" />
 <script src="/public/htmx.min.js"></script>
 <script src="/public/main.js"></script>
 {{end}}
 
+<!-- Header -->
 {{ define "header" }}
-<header class="px-8 py-4 bg-red-50">
-	<h1 class="text-3xl">Can you make it?</h1>
+<header class="bg-red-50 px-8 py-4">
+  <h1 class="text-3xl">Can you make it?</h1>
 </header>
 {{ end }}
 
+<!-- MAIN -->
 {{ define "main" }}
 <main class="p-8">
-	<h2 class="text-xl">Your upcoming events!</h2>
-	<p>Events go here...</p>
-	<h2 class="text-xl">Create a new Event!</h2>
-	{{ template "form_new_meeting" }}
+  <h2 class="text-xl">Your upcoming events!</h2>
+  <p>Events go here...</p>
+  <h2 class="text-xl">Create a new Event!</h2>
+  {{ template "form_new_meeting" }}
 </main>
 {{ end }}
 
+<!-- New Meeting Form -->
 {{ define "form_new_meeting" }}
 <form>
-	<div class="flex min-w-min flex-grow p-4 gap-4">
-
-		<div class="w-full">
-			<div>
-				<label class="block">
-					Event Title
-				</label>
-				<input type="text" />
-			</div>
-			<div>
-				<label class="block">
-					Event Description (Optional)
-				</label>
-				<textarea></textarea>
-			</div>
-		</div>
-		<div class="w-full">
-			<label class="block">
-				Dates & Times
-			</label>
-			<small>New line for each time</small>
-			<textarea id="datetimes-textarea" placeholder="yyyy-MM-dd, HH:mm"></textarea>
-		</div>
-		<div class="w-full">
-			<label class="block">
-				Select Dates & Times
-			</label>
-			<input id="datetime-select" type="datetime-local" onchange="addDate()" />
-		</div>
-	</div>
-	<button type="submit" class="bg-gray-50 p-8 rounded">Create Event</button>
+  <div class="flex min-w-min flex-grow gap-4 p-4">
+    <div class="w-full">
+      <div>
+        <label class="block"> Event Title </label>
+        <input type="text" />
+      </div>
+      <div>
+        <label class="block"> Event Description (Optional) </label>
+        <textarea></textarea>
+      </div>
+    </div>
+    <div class="w-full">
+      <label class="block"> Dates & Times </label>
+      <small>New line for each time</small>
+      <textarea id="datetimes-textarea" placeholder="yyyy-MM-dd, HH:mm"></textarea>
+    </div>
+    <div class="w-full">
+      <label class="block"> Select Dates & Times </label>
+      <input id="datetime-select" type="datetime-local" onchange="addDate()" />
+    </div>
+  </div>
+  <button type="submit" class="rounded bg-gray-50 p-8">Create Event</button>
 </form>
 {{ end }}

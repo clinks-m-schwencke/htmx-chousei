@@ -1,91 +1,47 @@
 {{ define "meeting" }}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    {{template "head_content" }}
+    <title>Hello Go!</title>
+  </head>
 
-<head>
-	{{template "head_content" }}
-	<title>Hello Go!</title>
-</head>
-
-<body>
-	<header>
-
-		<h1>Meeting Header</h1>
-	</header>
-	<main>
-		<h2>NEW MEETING</h2>
-		<p>No of respondents 6</p>
-	</main>
-	<table>
-		<tr>
-			<th>
-				Schedule
-			</th>
-			<th>
-				YES
-			</th>
-			<th>
-				MAYBE
-			</th>
-			<th>
-				NO
-			</th>
-			<!-- Names -->
-			<th>
-				John
-			</th>
-			<th>
-				Mary
-			</th>
-			<th>
-				Harry
-			</th>
-			<th>
-				Jane
-			</th>
-			<th>
-				Alice
-			</th>
-			<th>
-				Bob
-			</th>
-		</tr>
-		<tr>
-			<td>
-				21/06/2024
-			</td>
-			<td>
-				3
-			</td>
-			<td>
-				2
-			</td>
-			<td>
-				1
-			</td>
-			<!-- Names -->
-			<td>
-				YES
-			</td>
-			<td>
-				NO
-			</td>
-			<td>
-				MAYBE
-			</td>
-			<td>
-				YES
-			</td>
-			<td>
-				YES
-			</td>
-			<td>
-				MAYBE
-			</td>
-		</tr>
-	</table>
-
-</body>
-
+  <body>
+    <header>
+      <h1>Meeting Header</h1>
+    </header>
+    <main>
+      <h2>NEW MEETING</h2>
+      <p>No of respondents 6</p>
+    </main>
+    <table>
+      <tr>
+        <th>Schedule</th>
+        <th>YES</th>
+        <th>MAYBE</th>
+        <th>NO</th>
+        <!-- Names -->
+        <th>John</th>
+        <th>Mary</th>
+        <th>Harry</th>
+        <th>Jane</th>
+        <th>Alice</th>
+        <th>Bob</th>
+      </tr>
+      <tr>
+        <td>21/06/2024</td>
+        <td>3</td>
+        <td>2</td>
+        <td>1</td>
+        <!-- Names -->
+        <td>YES</td>
+        <td>NO</td>
+        <td>MAYBE</td>
+        <td>YES</td>
+        <td>YES</td>
+        <td>MAYBE</td>
+      </tr>
+    </table>
+  </body>
 </html>
 {{end}}
