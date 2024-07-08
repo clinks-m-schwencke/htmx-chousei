@@ -1,0 +1,11 @@
+{
+  "name": "htmx-chousei",
+  "private": true,
+  "scripts": {
+    "build": "npx tailwindcss -i ./public/css/main.css -o ./public/css/tailwind.css --minify",
+    "watch": "npx tailwindcss -i ./public/css/main.css -o ./public/css/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.4"
+  }
+}
