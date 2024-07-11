@@ -3,13 +3,28 @@
  */
 function addDate() {
   const dateTimesTextArea = document.querySelector("#datetimes-textarea");
-  const dateTimeSelect = document.querySelector("#datetime-select");
-  const value = new Date(dateTimeSelect.value);
-  dateTimeSelect.value = "";
+  const datePicker = document.querySelector("#date-picker");
+  const timePicker = document.querySelector("#time-picker");
+  console.log(datePicker.value)
+  console.log(timePicker.value)
+  const value = new Date(datePicker.value + "T" + timePicker.value);
+
+  let localeString = ''
+  if(value.toLocaleString() === 'Invalid Date') {
+    // Attempt with only date
+    const value = new Date(datePicker.value)
+    if(value.toLocaleString() !== 'Invalid Date'){
+      localeString = value.toLocaleDateString()
+    }else {
+      return
+    }
+  } else {
+    localeString = value.toLocaleString()
+  }
 
   if (dateTimesTextArea.value === "") {
-    dateTimesTextArea.value += value.toLocaleString();
+    dateTimesTextArea.value += localeString;
   } else {
-    dateTimesTextArea.value += "\n" + value.toLocaleString();
+    dateTimesTextArea.value += "\n" + localeString;
   }
 }

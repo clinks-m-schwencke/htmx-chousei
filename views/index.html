@@ -22,9 +22,9 @@
 {{ define "head_content" }}
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="/public/css/tailwind.css" />
+<link rel="stylesheet" href="/public/css/tailwind.css?a" />
 <script src="/public/htmx.min.js"></script>
-<script src="/public/main.js"></script>
+<script src="/public/main.js?b"></script>
 {{end}}
 
 <!-- Header -->
@@ -65,9 +65,11 @@
     </div>
     <div class="w-full">
       <label class="block"> Select Dates & Times </label>
-      <input id="datetime-select" type="datetime-local" onchange="addDate()" />
+      <input id="date-picker" type="date" />
+      <input id="time-picker" type="time" />
+      <button type="button" class="rounded bg-blue-400 px-4 py-2" onclick="addDate()">Add Date</button>
     </div>
   </div>
-  <button type="submit" class="rounded bg-gray-50 p-8">Create Event</button>
+  <button type="submit" class="rounded bg-gray-400 p-4">Create Event</button>
 </form>
 {{ end }}
