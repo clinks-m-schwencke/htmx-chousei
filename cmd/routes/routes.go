@@ -7,18 +7,6 @@ import (
 	"htmx-chousei.com/name/cmd/handlers"
 )
 
-// type SessionData struct {
-// 	Data     Data
-// 	FormData FormData
-// }
-
-type Data struct {
-}
-
-// type FormData FormData {
-//
-// }
-
 func Routes(e *echo.Echo) {
 
 	e.Static("/public", "public")

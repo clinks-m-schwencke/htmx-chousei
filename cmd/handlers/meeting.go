@@ -7,22 +7,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type Meeting struct {
-	Title       string
-	Description string
-	// DateTime *time.Time.list
-	Dates string
-}
+func handleMeetingPOST(c echo.Context) error {
+	// title := c.FormValue("title")
+	// description := c.FormValue("description")
+	// dates := c.FormValue("dates")
 
-func newMeeting(title string, description string, dates string) Meeting {
-	return Meeting{
-		Title:       title,
-		Description: description,
-		Dates:       dates,
-	}
-}
-
-func handleMeetingNew(c echo.Context) error {
 	return c.Render(http.StatusOK, "meeting", nil)
 }
 
