@@ -1,0 +1,17 @@
+package views
+
+templ Who() {
+@Main("Hello Go!") {
+<section>
+	<h2 id="greeting">
+		Who are you?
+	</h2>
+	<div>
+		<form hx-post="/hello" hx-target="#greeting">
+			<input name="name" id="name" type="text" />
+			<button type="submit">Say hello!</button>
+		</form>
+	</div>
+</section>
+}
+}

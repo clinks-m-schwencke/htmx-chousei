@@ -4,10 +4,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"htmx-chousei.com/name/cmd/stores"
+	"htmx-chousei.com/name/views"
 )
 
-func HandleIndex(c echo.Context) error {
-	store := stores.SessionDataStore
-	return c.Render(http.StatusOK, "index", store)
+func HandleIndexGet(c echo.Context) error {
+	return Render(c, http.StatusOK, views.Index())
 }

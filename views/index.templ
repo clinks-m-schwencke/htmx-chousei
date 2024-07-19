@@ -1,0 +1,69 @@
+package views
+
+import "htmx-chousei.com/name/cmd/lib/types"
+
+templ Index() {
+@Main("Can you make it?") {
+<header class="bg-red-50 px-8 py-4">
+	<h1 class="text-3xl">Can you make it?</h1>
+</header>
+<main class="p-8">
+	<h2 class="text-xl">Your upcoming events!</h2>
+	<div id="events" class="flex">
+		// {{ range .Meetings }}
+		// {{ template "meeting_card" . }}
+		// {{ end }}
+	</div>
+	<p>Events go here...</p>
+	<h2 class="text-xl">Create a new Event!</h2>
+	@MeetingForm(types.NewFormData())
+</main>
+}
+}
+
+templ MeetingCard(title string, description string) {
+<article>
+	<h4>{ title }</h4>
+	<p>{ description }</p>
+</article>
+}
+
+templ OobMeetingCard(title string, description string) {
+<div id="events" hx-swap-oob="afterbegin">
+	@MeetingCard(title, description)
+</div>
+}
+
+templ MeetingForm(formData types.FormData) {
+<form hx-post="/meeting">
+	<div class="flex min-w-min flex-grow gap-4 p-4">
+		<div class="w-full">
+			<div>
+				<label class="block">Event Title </label>
+				<input id="title" name="title" type="text" />
+			</div>
+			<div>
+				<label class="block">Event Description (Optional) </label>
+				<textarea id="description" name="description"></textarea>
+			</div>
+		</div>
+		<div class="w-full">
+			<label class="block">Dates & Times </label>
+			<small>New line for each time</small>
+			<textarea id="datetimes-textarea" name="dates" placeholder="yyyy-MM-dd, HH:mm"></textarea>
+		</div>
+		<div class="w-full">
+			<label class="block">Select Dates & Times </label>
+			<input id="date-picker" type="date" />
+			<input id="time-picker" type="time" />
+			<button type="button" class="rounded bg-blue-400 px-4 py-2" onclick="addDate()">Add Date</button>
+		</div>
+	</div>
+	if len(formData.Errors) > 0 {
+	for _, item := range formData.Errors {
+	<div class="text-red-500">{ item }</div>
+	}
+	}
+	<button type="submit" class="rounded bg-gray-400 p-4">Create Event</button>
+</form>
+}
