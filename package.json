@@ -1,5 +1,5 @@
 {
-  "name": "htmx-chousei",
+  "name": "chopitto-task",
   "private": true,
   "scripts": {
     "build": "npx tailwindcss -i ./public/css/main.css -o ./public/css/tailwind.css --minify",

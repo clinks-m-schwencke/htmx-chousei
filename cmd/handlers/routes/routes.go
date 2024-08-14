@@ -1,18 +1,19 @@
 package handlers
 
 import (
+	"chopitto-task/cmd/handlers"
+
 	"github.com/labstack/echo/v4"
-	"htmx-chousei.com/name/cmd/handlers"
 )
 
 func Routes(e *echo.Echo) {
 
 	e.Static("/public", "public")
 
-	e.GET("/", handlers.HandleIndexGet)
+	// TODO
+	// e.GET("/login", handlers.HandleIndexGet)
 
-	e.GET("/hello", handlers.HandleHelloGET)
-	e.POST("/hello", handlers.HandleHelloPOST)
+	e.GET("/", handlers.HandleIndexGet)
 
 	e.POST("/meeting", handlers.HandleMeetingPost)
 

@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
+	"chopitto-task/views"
 	"github.com/labstack/echo/v4"
-	"htmx-chousei.com/name/views"
 )
 
 func HandleHelloGET(c echo.Context) error {
