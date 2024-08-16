@@ -9,28 +9,73 @@ templ Index(tasks []types.Task) {
 		</header>
 		<main class="p-8">
 			<h2 class="text-xl">Your tasks</h2>
-			<table id="task-list" class="">
+			<table id="task-list">
 				<thead>
-					<th></th>
-					<th>Title</th>
-					<th>Author</th>
-					<th>Assigned</th>
-					<th>Due</th>
+					<th class="px-2 py-1">Done?</th>
+					<th class="px-2 py-1">Title</th>
+					<th class="px-2 py-1">Author</th>
+					<th class="px-2 py-1">Assigned</th>
+					<th class="px-2 py-1">Due</th>
 				</thead>
 				<tbody>
 					for _, task := range(tasks) {
-						<tr>
-							<td></td>
-							<td>{ task.Title }</td>
-							<td>{ task.AuthorName }</td>
-							<td>{ task.AssignedName }</td>
-							<td>{ task.DueOn }</td>
-						</tr>
+						@TaskSingle(task)
 					}
+					@TaskFormNew()
 				</tbody>
 			</table>
 		</main>
 	}
+}
+
+templ TaskSingle(task types.Task) {
+	<tr>
+		<td class="px-2 py-1">
+			<input type="checkbox" checked?={ task.Done }/>
+			<input type="checkbox" checked?={ task.Reviewed } disabled/>
+		</td>
+		<td class="px-2 py-1">{ task.Title }</td>
+		// TODO: Make it an avatar circle
+		<td class="px-2 py-1">{ task.AuthorName }</td>
+		// TODO: Make it an avatar circle
+		<td class="px-2 py-1">{ task.AssignedName }</td>
+		<td class="px-2 py-1">{ task.DueOn }</td>
+	</tr>
+}
+
+templ TaskFormNew() {
+	<tr>
+		<form class="contents" hx-post="/task">
+			<td class="px-2 py-1">
+				<input type="checkbox" disabled/>
+				<input type="checkbox" disabled/>
+			</td>
+			<td class="px-2 py-1">
+				<input type="text" name="title" id="title" required/>
+			</td>
+			<td class="px-2 py-1">
+				<select name="author" id="author" disabled>
+					<option value="1" selected>Matthew Schwencke</option>
+					<option value="2">Test Man</option>
+					<option value="3">Test Lady</option>
+				</select>
+			</td>
+			<td class="px-2 py-1">
+				<select name="assigned" id="assigned" required>
+					<option value="" disabled selected>Select Person</option>
+					<option value="1">Matthew Schwencke</option>
+					<option value="2">Test Man</option>
+					<option value="3">Test Lady</option>
+				</select>
+			</td>
+			<td class="px-2 py-1">
+				<input type="date" name="due-on" id="due-on"/>
+			</td>
+			<td>
+				<button type="submit">Create</button>
+			</td>
+		</form>
+	</tr>
 }
 
 templ MeetingCard(title string, description string) {

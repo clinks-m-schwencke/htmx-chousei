@@ -27,6 +27,9 @@ func HandleIndexGet(c echo.Context) error {
 
 	for rows.Next() {
 		var task types.Task
+		task.Done = false
+		task.Reviewed = false
+
 		err := rows.Scan(
 			&task.TaskId,
 			&task.Title,

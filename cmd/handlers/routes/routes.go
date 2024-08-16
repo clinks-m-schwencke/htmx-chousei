@@ -15,7 +15,13 @@ func Routes(e *echo.Echo) {
 
 	e.GET("/", handlers.HandleIndexGet)
 
-	e.POST("/meeting", handlers.HandleMeetingPost)
+	// TODO
+	// e.GET("task", handlers.HandleTaskGet) // Do I need this one?
+	e.POST("task", handlers.HandleTaskPost)
+	// e.PATCH("task", handlers.HandleTaskPatch)
+	// e.DELETE("task", handlers.HandleTaskDelete)
+
+	// e.POST("/meeting", handlers.HandleMeetingPost)
 
 	// e.GET("/hello", func(c echo.Context) error {
 	//
