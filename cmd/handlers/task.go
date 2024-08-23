@@ -62,6 +62,8 @@ func HandleTaskGet(c echo.Context) error {
 func HandleTaskPost(c echo.Context) error {
 	title := strings.TrimSpace(c.FormValue("title"))
 	// := strings.TrimSpace(c.FormValue("author"))
+	// TODO: Get from login?
+	author := 1
 	assigned := strings.TrimSpace(c.FormValue("assigned"))
 	dueOn := strings.TrimSpace(c.FormValue("due-on"))
 
@@ -77,7 +79,7 @@ func HandleTaskPost(c echo.Context) error {
 	INSERT INTO task (title, author, assigned, due_on)
 	VALUES(?, ?, ?, ?)
 	`
-	result, err := lib.Db.Exec(sqlCmd, title, 1, assigned, dueOn)
+	result, err := lib.Db.Exec(sqlCmd, title, author, assigned, dueOn)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -108,6 +110,5 @@ func HandleTaskPost(c echo.Context) error {
 		log.Fatal(err)
 	}
 
-	// views.Task
-	return Render(c, http.StatusOK, views.TaskSingle(task))
+	return Render(c, http.StatusOK, views.TaskPostResponse(task))
 }

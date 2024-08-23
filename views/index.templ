@@ -9,7 +9,7 @@ templ Index(tasks []types.Task) {
 		</header>
 		<main class="p-8">
 			<h2 class="text-xl">Your tasks</h2>
-			<table id="task-list">
+			<table>
 				<thead>
 					<th class="px-2 py-1">Done?</th>
 					<th class="px-2 py-1">Title</th>
@@ -17,7 +17,7 @@ templ Index(tasks []types.Task) {
 					<th class="px-2 py-1">Assigned</th>
 					<th class="px-2 py-1">Due</th>
 				</thead>
-				<tbody>
+				<tbody id="task-list" hx-target="closest tr" hx-swap="outerHTML">
 					for _, task := range(tasks) {
 						@TaskSingle(task)
 					}
@@ -44,38 +44,50 @@ templ TaskSingle(task types.Task) {
 }
 
 templ TaskFormNew() {
-	<tr>
-		<form class="contents" hx-post="/task">
-			<td class="px-2 py-1">
-				<input type="checkbox" disabled/>
-				<input type="checkbox" disabled/>
-			</td>
-			<td class="px-2 py-1">
-				<input type="text" name="title" id="title" required/>
-			</td>
-			<td class="px-2 py-1">
-				<select name="author" id="author" disabled>
-					<option value="1" selected>Matthew Schwencke</option>
-					<option value="2">Test Man</option>
-					<option value="3">Test Lady</option>
-				</select>
-			</td>
-			<td class="px-2 py-1">
-				<select name="assigned" id="assigned" required>
-					<option value="" disabled selected>Select Person</option>
-					<option value="1">Matthew Schwencke</option>
-					<option value="2">Test Man</option>
-					<option value="3">Test Lady</option>
-				</select>
-			</td>
-			<td class="px-2 py-1">
-				<input type="date" name="due-on" id="due-on"/>
-			</td>
-			<td>
-				<button type="submit">Create</button>
-			</td>
-		</form>
+	<tr id="new-task-form-row">
+		<td class="px-2 py-1">
+			<input type="checkbox" disabled/>
+			<input type="checkbox" disabled/>
+		</td>
+		<td class="px-2 py-1">
+			<input type="text" name="title" id="title" value="" required/>
+		</td>
+		<td class="px-2 py-1">
+			<select name="author" id="author" disabled>
+				<option value="1" selected>Matthew Schwencke</option>
+				<option value="2">Test Man</option>
+				<option value="3">Test Lady</option>
+			</select>
+		</td>
+		<td class="px-2 py-1">
+			<select name="assigned" id="assigned" required>
+				<option value="" disabled selected>Select Person</option>
+				<option value="1">Matthew Schwencke</option>
+				<option value="2">Test Man</option>
+				<option value="3">Test Lady</option>
+			</select>
+		</td>
+		<td class="px-2 py-1">
+			<input type="date" name="due-on" id="due-on" value=""/>
+		</td>
+		<td>
+			<button type="button" hx-post="/task" hx-include="closest tr">
+				Create
+			</button>
+		</td>
 	</tr>
+}
+
+// <button type="button" hx-target="#new-task-form-row" hx-post="/task" hx-swap="outerHTML">Create</button>
+
+// templ OobTask(task types.Task) {
+// <div id="task-list" hx-swap-oob="beforeend">
+// @TaskSingle(task)
+// </div>
+//}
+templ TaskPostResponse(task types.Task) {
+	@TaskSingle(task)
+	@TaskFormNew()
 }
 
 templ MeetingCard(title string, description string) {

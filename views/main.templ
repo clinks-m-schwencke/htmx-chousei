@@ -21,6 +21,7 @@ templ Head(currentTime string) {
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<link rel="stylesheet" href={ "/public/css/tailwind.css?time=" + currentTime }/>
-	<script src="/public/htmx.min.js"></script>
+	// <!-- <script src="/public/htmx.min.js"></script> -->
+	<script src="/public/htmx.js"></script>
 	<script src={ "/public/main.js?time=" + currentTime }></script>
 }
