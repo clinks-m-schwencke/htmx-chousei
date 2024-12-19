@@ -1,0 +1,45 @@
+package authviews
+
+import "chopitto-task/views/layout"
+import "chopitto-task/lang"
+
+templ Home(fromProtected bool, messages lang.HomePageStrings) {
+	<section class="mx-auto w-fit flex flex-col gap-8 text-center">
+		<h1 class="text-5xl font-bold">{ messages.Title }</h1>
+		<p class="text-2xl font-thin">
+			{ messages.Description }
+		</p>
+		if !fromProtected {
+			<hr class="my-4 w-4/5 mx-auto opacity-25"/>
+			<p class="text-base font-thin">{ messages.HaveAccount }</p>
+			<footer class="flex gap-4 justify-center">
+				<a
+					hx-swap="transition:true"
+					href="/login"
+					class="badge badge-primary px-6 py-4 hover:scale-[1.1] text-xl font-thin"
+				>{ messages.Login }</a>
+				<a
+					hx-swap="transition:true"
+					href="/register"
+					class="badge badge-neutral px-6 py-4 hover:scale-[1.1] text-xl font-thin"
+				>{ messages.Register }</a>
+			</footer>
+		}
+	</section>
+}
+
+templ HomeIndex(
+	title,
+	username,
+	currentTime string,
+	fromProtected,
+	isError bool,
+	errorMessages,
+	successMessages []string,
+	cmp templ.Component,
+	messages lang.BaseLayoutStrings,
+) {
+	@layout.Base(title, username, currentTime, fromProtected, isError, errorMessages, successMessages, messages) {
+		@cmp
+	}
+}

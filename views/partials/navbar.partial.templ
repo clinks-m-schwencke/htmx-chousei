@@ -1,0 +1,61 @@
+package partials
+
+import "chopitto-task/lang"
+
+// Common Navbar for all pages
+templ Navbar(username string, fromProtected bool, messages lang.BaseLayoutStrings) {
+	<nav class="navbar bg-primary text-primary-content fixed top-0 z-10">
+		<div class="navbar-start">
+			<a hx-swap="transistion:true" class="btn btn-ghost text-xl" href="/">
+				{ messages.Title }
+			</a>
+		</div>
+		<div class="navbar-end">
+			if fromProtected {
+				<span class="font-bold text-indigo-700 mr-8">
+					{ username }
+				</span>
+				<a hx-swap="transition:true" class="btn btn-ghost text-lg" href="/task">
+					{ messages.Tasks }
+				</a>
+				<button
+					type="button"
+					hx-swap="transition:true"
+					hx-post="/logout"
+					hx-confirm={ messages.LogoutConfirmDetails }
+					data-confirm-title={ messages.LogoutConfirmTitle }
+					data-confirm-ok={ messages.LogoutConfirmOk }
+					data-confirm-cancel={ messages.LogoutConfirmCancel }
+					onClick="this.addEventListener('htmx:confirm', (e) => {
+						e.preventDefault()
+						Swal.fire({
+							title: 'Log out?',
+							text: `${e.detail.question}`,
+							icon: 'warning',
+							background: '#1D232A',
+							color: '#A6ADBA',
+							showCancelButton: true,
+							confirmButtonColor: '#d33',
+							cancelButtonColor: '#3085d6',
+							confirmButtonText: 'Log out'
+						}).then((result) => {
+							if(result.isConfirmed) e.detail.issueRequest(true);
+						})
+					})"
+					hx-target="body"
+					hx-push-url="true"
+					class="btn btn-ghost text-lg"
+				>
+					{ messages.Logout }
+				</button>
+			} else {
+				<a hx-swap="transition:true" class="btn btn-ghost text-lg" href="/register">
+					{ messages.Register }
+				</a>
+				<a hx-swap="transition:true" class="btn btn-ghost text-lg" href="/login">
+					{ messages.Login }
+				</a>
+			}
+		</div>
+	</nav>
+}

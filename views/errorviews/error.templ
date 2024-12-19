@@ -1,0 +1,18 @@
+package errorviews
+
+import "chopitto-task/views/layout"
+import "chopitto-task/lang"
+
+templ ErrorIndex(
+	title,
+	username,
+	currentTime string,
+	fromProtected,
+	isError bool,
+	cmp templ.Component,
+	messages lang.BaseLayoutStrings,
+) {
+	@layout.Base(title, username, currentTime, fromProtected, isError, []string{}, []string{}, messages) {
+		@cmp
+	}
+}

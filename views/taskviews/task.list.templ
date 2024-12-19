@@ -1,0 +1,292 @@
+package taskviews
+
+import (
+	"chopitto-task/views/layout"
+	"chopitto-task/services"
+	"strings"
+	"strconv"
+	"fmt"
+	"chopitto-task/lang"
+)
+
+type TaskPageData struct {
+	TitlePage string
+	User      services.Person
+	Tasks     []services.Task
+	Members   []services.Person
+	EditId    int
+}
+
+templ TaskList(data TaskPageData, messages lang.TaskPageStrings) {
+	<div>
+		<h1>
+			{ strings.Trim(data.TitlePage, "| ") }
+		</h1>
+	</div>
+	<section>
+		<table>
+			<thead>
+				<th>{ messages.Id }</th>
+				<th>
+					{ messages.Complete }
+				</th>
+				<th>
+					{ messages.Reviewed }
+				</th>
+				<th>{ messages.Tasks }</th>
+				<th>{ messages.CreatedBy }</th>
+				<th>{ messages.Assigned }</th>
+				<th>{ messages.Reviewer }</th>
+				<th>{ messages.DueDate }</th>
+				<th class="text-center">{ messages.Options }</th>
+			</thead>
+			<tbody id="task-table" hx-get="task/table" hx-trigger="updateTask from:body">
+				@TaskTableContent(data, messages)
+			</tbody>
+		</table>
+	</section>
+}
+
+templ TaskTableContent(data TaskPageData, messages lang.TaskPageStrings) {
+	if len(data.Tasks) != 0 {
+		for _, task := range(data.Tasks) {
+			if data.EditId == task.Id {
+				@UpdateTaskForm(task, data, messages)
+			} else {
+				@TaskRow(task, data.User.Id, data.EditId, messages)
+			}
+		}
+	} else {
+		<tr>
+			<td colspan="8" align="center">
+				{ messages.NoTasks }
+			</td>
+		</tr>
+	}
+	if data.EditId < 0 {
+		@NewTaskForm(data, messages)
+	}
+}
+
+templ TaskRow(task services.Task, userId, editId int, messages lang.TaskPageStrings) {
+	<tr>
+		<th>{ strconv.Itoa(int(task.Id)) }</th>
+		// Complete
+		<td class="text-center">
+			<input
+				type="checkbox"
+				class="checkbox"
+				name="complete"
+				disabled?={ (task.Assignee != userId && task.Reviewer != userId) || task.Reviewed }
+				checked?={ task.Completed }
+				hx-patch={ fmt.Sprintf("/task/%d/complete", task.Id) }
+				hx-target="closest tr"
+				hx-swap="outerHTML"
+			/>
+		</td>
+		// Reviewed
+		<td class="text-center">
+			<input
+				type="checkbox"
+				class="checkbox"
+				name="reviewed"
+				disabled?={ task.Reviewer != userId || !task.Completed }
+				checked?={ task.Reviewed }
+				hx-patch={ fmt.Sprintf("/task/%d/review", task.Id) }
+				hx-target="closest tr"
+				hx-swap="outerHTML"
+			/>
+		</td>
+		<td>
+			{ task.Title }
+		</td>
+		<td class="text-center">
+			{ task.CreatedByName }
+		</td>
+		<td class="text-center">
+			{ task.AssigneeName }
+		</td>
+		<td class="text-center">
+			{ task.ReviewerName }
+		</td>
+		<td class="text-center">
+			{ task.DueOn }
+		</td>
+		<td class="flex justify-center gap-2">
+			if editId < 0 && task.CreatedBy == userId {
+				<button
+					class="badge badge-primary p-3 hover:scale-110"
+					hx-get={ fmt.Sprintf("/task/%d/edit", task.Id) }
+					hx-target="#task-table"
+				>
+					{ messages.EditTask }
+				</button>
+				<button
+					class="badge badge-ghost p-3 hover:badge-error hover:scale-110"
+					hx-delete={ fmt.Sprintf("/task/%d", task.Id) }
+					hx-confirm={ task.Title }
+					data-confirm-title={ messages.DeleteTaskConfirmTitle }
+					data-confirm-ok={ messages.DeleteTaskConfirmOk }
+					data-confirm-cancel={ messages.Cancel }
+					onClick="this.addEventListener('htmx:confirm', (e) => {
+										e.preventDefault()
+										Swal.fire({
+											title: `${e.target.getAttribute('data-confirm-title')}`,
+											text: `${e.detail.question}`,
+											icon: 'warning',
+											background: '#1D232A',
+											color: '#A6ADBA',
+											showCancelButton: true,
+											confirmButtonColor: '#d33',
+											cancelButtonColor: '#3085d6',
+											confirmButtonText: `${e.target.getAttribute('data-confirm-ok')}`,
+											cancelButtonText: `${e.target.getAttribute('data-confirm-cancel')}`,
+										}).then((result) => {
+											if(result.isConfirmed) e.detail.issueRequest(true);
+										})
+									})"
+				>
+					{ messages.DeleteTask }
+				</button>
+			}
+		</td>
+	</tr>
+}
+
+templ NewTaskForm(data TaskPageData, messages lang.TaskPageStrings) {
+	<tr id="new-task-form">
+		<td></td>
+		<td></td>
+		<td></td>
+		<td>
+			<input class="input input-primary" name="title" id="title" required/>
+		</td>
+		<td>
+			<span class="outline-current">
+				{ data.User.Name }
+			</span>
+		</td>
+		<td>
+			<select class="select" name="assignee">
+				<option selected disabled hidden>{ messages.SelectUserPlaceholder }...</option>
+				for _, member := range(data.Members) {
+					<option value={ strconv.Itoa(member.Id) }>
+						{ member.Name }
+					</option>
+				}
+			</select>
+		</td>
+		<td>
+			<select class="select" name="reviewer">
+				for _, member := range(data.Members) {
+					<option value={ strconv.Itoa(member.Id) } selected?={ member.Id == data.User.Id }>
+						{ member.Name }
+					</option>
+				}
+			</select>
+		</td>
+		<td>
+			<input type="date" class="input" name="dueon" id="dueon"/>
+		</td>
+		<td>
+			<button
+				type="button"
+				hx-post="/task"
+				hx-include="closest tr"
+				hx-target="#toast-container"
+				hx-swap="outerHTML"
+				class="btn btn-primary btn-outline"
+			>
+				{ messages.CreateTask }
+			</button>
+		</td>
+	</tr>
+}
+
+templ UpdateTaskForm(task services.Task, data TaskPageData, messages lang.TaskPageStrings) {
+	<tr id="new-task-form">
+		<th>{ strconv.Itoa(task.Id) }</th>
+		// Complete
+		<td class="text-center">
+			<input
+				type="checkbox"
+				class="checkbox"
+				disabled
+				checked?={ task.Completed }
+			/>
+		</td>
+		// Reviewed
+		<td class="text-center">
+			<input
+				type="checkbox"
+				class="checkbox"
+				disabled
+				checked?={ task.Reviewed }
+			/>
+		</td>
+		<td>
+			<input class="input input-primary" name="title" id="title" required value={ task.Title }/>
+		</td>
+		<td>
+			<span class="outline-current">
+				{ task.CreatedByName }
+			</span>
+		</td>
+		<td>
+			<select class="select" name="assignee">
+				for _, member := range(data.Members) {
+					<option value={ strconv.Itoa(member.Id) } selected?={ member.Id == task.Assignee }>
+						{ member.Name }
+					</option>
+				}
+			</select>
+		</td>
+		<td>
+			<select class="select" name="reviewer">
+				for _, member := range(data.Members) {
+					<option value={ strconv.Itoa(member.Id) } selected?={ member.Id == task.Reviewer }>
+						{ member.Name }
+					</option>
+				}
+			</select>
+		</td>
+		<td>
+			<input type="date" class="input" name="dueon" id="dueon" value={ task.DueOn }/>
+		</td>
+		<td>
+			<button
+				type="button"
+				hx-patch={ fmt.Sprintf("/task/%d", task.Id) }
+				hx-include="closest tr"
+				hx-target="#toast-container"
+				hx-swap="outerHTML"
+				class="btn btn-primary btn-outline"
+			>
+				{ messages.UpdateTask }
+			</button>
+			<button
+				class="btn btn-outline btn-sm btn-secondary"
+				hx-get="task/table"
+				hx-target="#task-table"
+			>
+				{ messages.Cancel }
+			</button>
+		</td>
+	</tr>
+}
+
+templ TaskIndex(
+	title,
+	username,
+	currentTime string,
+	fromProtected,
+	isError bool,
+	errorMessages,
+	successMessages []string,
+	cmp templ.Component,
+	messages lang.BaseLayoutStrings,
+) {
+	@layout.Base(title, username, currentTime, fromProtected, isError, errorMessages, successMessages, messages) {
+		@cmp
+	}
+}

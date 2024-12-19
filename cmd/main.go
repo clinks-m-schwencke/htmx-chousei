@@ -7,8 +7,9 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"golang.org/x/time/rate"
 
-	_ "chopitto-task/cmd/handlers/routes"
-	_ "chopitto-task/cmd/lib/data"
+	"chopitto-task/db"
+	"chopitto-task/handlers"
+	"chopitto-task/services"
 )
 
 // TODO: These should go into an .env file
@@ -22,11 +23,10 @@ func main() {
 	e := echo.New()
 
 	// Create static routes
-	e.Static("/public", "public")
+	e.Static("/static", "static")
 
-	// TODO
-	// Setip custom error handling
-	// e.HTTPErrorHandler = handlers.CustomHTTPErrorHandler
+	// Setup custom error handling
+	e.HTTPErrorHandler = handlers.CustomHttpErrorHandler
 
 	// Verbose logging middleware
 	e.Pre(middleware.Logger())
@@ -44,21 +44,19 @@ func main() {
 	e.Use(session.Middleware(sessions.NewCookieStore(([]byte(SECRET_KEY)))))
 
 	// Create database store
-	// TODO
-	// store, err := db.NewStore(DB_NAME)
-	// if err != nil {
-	// 	e.Logger.Fatal("failed to create store: %s", err)
-	// }
+	store, err := db.NewStore(DB_NAME)
+	if err != nil {
+		e.Logger.Fatal("failed to create store: %s", err)
+	}
 
-	// Setup db interaction services
-	// TODO
-	// personService := services.NewPersonService(services.Person{}, store)
-	// authHandler := handlers.NewAuthHandler(personService)
+	// Setup db interaction services and route handlers
+	personService := services.NewPersonServices(services.Person{}, store)
+	authHandler := handlers.NewAuthHandler(personService)
 	//
-	// taskService := services.NewTaskService(services.Task{}, store)
-	// taskHandler := handlers.NewTaskHandler(taskService)
+	taskService := services.NewTaskServices(services.Task{}, store)
+	taskHandler := handlers.NewTaskHandler(taskService)
 	//
-	// handlers.Routes(e, authHandler, taskHandler)
+	handlers.SetupRoutes(e, authHandler, taskHandler)
 
-	e.Logger.Fatal(e.Start(":8889"))
+	e.Logger.Fatal(e.Start(":8888"))
 }
